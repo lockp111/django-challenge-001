@@ -4,9 +4,10 @@ from app import views
 
 apis = [
     path('login/', views.Login.as_view()),
+    path('logout/', views.Logout.as_view()),
     path('sign-up/', views.SignUp.as_view()),
-    path('articles/', views.Articles.as_view()),
-    re_path(r'^articles/(\d+)/$', views.ArticleDetail.as_view()),
+    path('articles/', views.Articles().get),
+    re_path(r'^articles/(\d+)/$', views.ArticleDetail),
 ]
 
 admins = [

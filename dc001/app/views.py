@@ -2,7 +2,7 @@ import json
 from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.forms.models import model_to_dict
 from django.views import View
 from app import articles, authors
@@ -35,6 +35,11 @@ class SignUp(View):
 
         del data['password']
         return JsonResponse(data)
+
+class Logout(View):
+    def post(self, request: HttpRequest):
+        logout(request)
+        return JsonResponse({"code": 0, "msg": "success"})
 
 
 class Authors(View):
@@ -88,10 +93,33 @@ class Articles(View):
             return JsonResponse({"code": -1, "msg": str(e)})
 
         return JsonResponse({"code": 0, "msg": "success"})
+    
+    def put(self, request: HttpRequest):
+        req = json.loads(request.body)
+
+        try:
+            articles.update(req['id'], req)
+        except Exception as e:
+            return JsonResponse({"code": -1, "msg": str(e)})
+
+        return JsonResponse({"code": 0, "msg": "success"})
+
+    def delete(self, request: HttpRequest):
+        req = json.loads(request.body)
+
+        try:
+            articles.delete(req['id'])
+        except Exception as e:
+            return JsonResponse({"code": -1, "msg": str(e)})
+
+        return JsonResponse({"code": 0, "msg": "success"})
 
 
-class ArticleDetail(View):
-    def get(self, request: HttpRequest, id: int):
-        if request.user.is_authenticated:
-            return HttpResponse('user login')
-        return HttpResponse('user logout')
+def ArticleDetail(request: HttpRequest, id: int):
+    if request.method != "GET":
+        return HttpResponse("404 not found")
+
+    res = articles.get(id)
+    if not request.user.is_authenticated:
+        del res['body']
+    return JsonResponse(res, safe=False)
