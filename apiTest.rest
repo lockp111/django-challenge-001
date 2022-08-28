@@ -1,0 +1,54 @@
+POST http://localhost:8000/api/sign-up/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "name":"harman",
+    "password":"abcd1234"
+}
+###
+POST http://localhost:8000/api/login/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "name":"harman",
+    "password":"abcd1234"
+}
+###
+GET http://localhost:8000/api/admin/authors/ HTTP/1.1
+###
+POST http://localhost:8000/api/admin/authors/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "name":"harman",
+    "picture":""
+}
+###
+PUT http://localhost:8000/api/admin/authors/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "id":1,
+    "picture":"updated"
+}
+###
+DELETE  http://localhost:8000/api/admin/authors/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "id":1,
+}
+###
+GET http://localhost:8000/api/articles/?category=Category HTTP/1.1
+###
+POST http://localhost:8000/api/articles/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "uid":2,
+    "category": "Category",
+    "title": "Article title",
+    "summary": "This is a summary of the article",
+    "firstParagraph": "<p>This is the first paragraph of this article</p>",
+    "body": "<div><p>Second paragraph</p><p>Third paragraph</p></div>"
+}
